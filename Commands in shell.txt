@@ -1,0 +1,342 @@
+PowerShell 7.2.6
+Copyright (c) Microsoft Corporation.
+https://aka.ms/powershell
+Type 'help' to get help.
+PS C:\Users\HOME\PycharmProjects\D2_news> venv\scripts\activate
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news> cd newspaper
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> python manage.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+September 20, 2022 - 08:53:31
+Django version 4.1.1, using settings 'NewsPaper.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> ^C
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> py manage.py makemigrations
+No changes detected
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> py manage.py makemigrations
+Migrations for 'news':
+  news\migrations\0001_initial.py
+    - Create model Author
+    - Create model Category
+    - Create model Post
+    - Create model PostCategory
+    - Add field postCategory to post
+    - Create model Comment
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, news, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying news.0001_initial... OK
+  Applying sessions.0001_initial... OK
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> python manage.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 20, 2022 - 09:02:37
+Django version 4.1.1, using settings 'NewsPaper.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> ^C
+(venv) PS C:\Users\HOME\PycharmProjects\D2_news\NewsPaper> python manage.py shell
+Python 3.8.10 (tags/v3.8.10:3d8993a, May  3 2021, 11:48:03) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> u1 = User.objects.create_user(username='Bob')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'User' is not defined
+>>> u1 = User.objects.create(username='Bob')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'User' is not defined
+>>> from news.models import *
+>>> u1 = User.objects.create(username='Bob')
+>>> u2 = User.objects.create(username='Alex')
+>>> u1
+<User: Bob>
+>>> u2
+<User: Alex>
+>>> Author.objects.create(userAuthor=u1)
+<Author: Author object (1)>
+>>> Category.objects.create(name='Sport')
+<Category: Category object (1)>
+>>> Category.objects.create(name='Culture')
+<Category: Category object (2)>
+>>> Category.objects.create(name='Politic')
+<Category: Category object (3)>
+>>> Category.objects.create(name='Ecology')
+<Category: Category object (4)>
+>>> Author.objects.create(userAuthor=u2)
+<Author: Author object (2)>
+>>> author = Author.objects.get(id=1)
+>>> author
+<Author: Author object (1)>
+>>> Post.objects.create(author=author, type='NE', title='title 1', text='some text 1')
+<Post: Post object (1)>
+>>> Post.objects.create(author=author, type='NE', title='title 2', text='some text 2')
+<Post: Post object (2)>
+>>> author = Author.objects.get(id=2)
+>>> Post.objects.create(author=author, type='AR', title='title 3', text='some text 3')
+<Post: Post object (3)>
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=3))
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=4))
+>>> Commet.objects.create(commentPost=Post.objects.get(id=1), commentAuthor=Author.objects.get(id=1).userAuthor, text='some text by user1')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'Commet' is not defined
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentAuthor=Author.objects.get(id=1).userAuthor, text='some text by user1')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentAuthor=Author.objects.get(id=1).userAuthor, text='some text by user1 -2')
+<Comment: Comment object (2)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentAuthor=Author.objects.get(id=2).userAuthor, text='some text by user2')
+<Comment: Comment object (3)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=4), commentAuthor=Author.objects.get(id=2).userAuthor, text='some text by user2 -2')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\query.py", line 650, in get
+    raise self.model.DoesNotExist(
+news.models.Post.DoesNotExist: Post matching query does not exist.
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentAuthor=Author.objects.get(id=2).userAuthor, text='some text by user2 -2')
+<Comment: Comment object (4)>
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).rating
+1
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=2).dislike()
+>>> Post.objects.get(id=2).dislike()
+>>> Post.objects.get(id=2).dislike()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=3).dislike()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> a = Author.objects.get(id=1)
+>>> a.update_rating()
+>>> a.ratingAuthor
+1
+>>> a = Author.objects.get(id=2)
+>>> a.ratingAuthor
+0
+>>> a.update_rating()
+>>> a.ratingAuthor
+18
+>>> a = Author.objects.order_by('-ratingAuthor')[:1]
+>>> a
+<QuerySet [<Author: Author object (2)>]>
+>>> for i in a:
+... i.ratingAuthor
+  File "<console>", line 2
+    i.ratingAuthor
+    ^
+IndentationError: expected an indented block
+>>> a.ratingAuthor
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'QuerySet' object has no attribute 'ratingAuthor'
+>>> for i in a:
+... i.ratingAuthor
+  File "<console>", line 2
+    i.ratingAuthor
+    ^
+IndentationError: expected an indented block
+>>> a
+<QuerySet [<Author: Author object (2)>]>
+>>> for i in a:
+... i.userAuthor.username
+  File "<console>", line 2
+    i.userAuthor.username
+    ^
+IndentationError: expected an indented block
+>>> print(f'Best Post: "{b_post[0].name}", Author: {b_post[0].author_post.author_user}, Date posted: {b_post[0].date_pub.strftime("%m-%d-%Y, %H:%M:%S")}, Rating Post = {b_post[0].content_rate}
+\nPreview this Post: "{b_post[0].preview()}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'b_post' is not defined
+>>> print(f'Best Post: "{b_post[0].name}", Author: {b_post[0].author_post.author_user}, Date posted: {b_post[0].date_pub.strftime("%m-%d-%Y, %H:%M:%S")}, Rating Post = {b_post[0].content_rate}
+\nPreview this Post: "{b_post[0].preview()}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'b_post' is not defined
+>>> b_author = Author.objects.order_by('-ratingAuthor')[:1]
+>>> print(f'Best Author: "{userAuthor.username}", Rating: "{ratingAuthor}")
+  File "<console>", line 1
+    print(f'Best Author: "{userAuthor.username}", Rating: "{ratingAuthor}")
+                                                                          ^
+SyntaxError: EOL while scanning string literal
+>>> print(f'Best Author: "{b_author.userAuthor.username}", Rating: "{b_author.ratingAuthor}")
+  File "<console>", line 1
+    print(f'Best Author: "{b_author.userAuthor.username}", Rating: "{b_author.ratingAuthor}")
+                                                                                            ^
+SyntaxError: EOL while scanning string literal
+>>> b_author = Author.objects.order_by('-ratingAuthor')[:1]
+>>> b_author
+<QuerySet [<Author: Author object (2)>]>
+>>> for i in b_author:
+... i.ratingAuthor
+  File "<console>", line 2
+    i.ratingAuthor
+    ^
+IndentationError: expected an indented block
+>>> for i in b_author:
+...     i.ratingAuthor
+...     i.userAuthor.username
+...
+18
+'Alex'
+>>> print(f'Best Author: "{b_author.userAuthor.username}", Rating: "{b_author.ratingAuthor}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'QuerySet' object has no attribute 'userAuthor'
+>>> print(f'"{b_author.ratingAuthor}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'QuerySet' object has no attribute 'ratingAuthor'
+>>> print(f'"{b_author[0].ratingAuthor}"')
+"18"
+>>> print(f'Best Author: "{b_author[0].userAuthor.username}", Rating: "{b_author[0].ratingAuthor}"')
+Best Author: "Alex", Rating: "18"
+>>> b_post = Post.objects.order_by('-rating')[:1]
+>>> b_post
+<QuerySet [<Post: Post object (3)>]>
+>>> print(f'Best Post - Date posted: "{b_post[0].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[0].author}", Rating Post = "{b_post[0].rating}"')
+Best Post - Date posted: "09-20-2022, 04:21:35", Author: "Author object (2)", Rating Post = "5"
+>>> print(f'Best Post - Date posted: "{b_post[0].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[0].author.username}", Rating Post = "{b_post[0].rating}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'Author' object has no attribute 'username'
+>>> print(f'Best Post - Date posted: "{b_post[0].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[0].author.userAuthor.username}", Rating Post = "{b_post[0].rating}"')
+Best Post - Date posted: "09-20-2022, 04:21:35", Author: "Alex", Rating Post = "5"
+>>> print(f'Best Post - Date posted: "{b_post[0].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[0].author.userAuthor.username}", Rating Post = "{b_post[0].rating}", Title = "{b_pos
+t[0].title}"')
+Best Post - Date posted: "09-20-2022, 04:21:35", Author: "Alex", Rating Post = "5", Title = "title 3"
+>>> print(f'Best Post - Date posted: "{b_post[0].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[0].author.userAuthor.username}", Rating Post = "{b_post[0].rating}", Title = "{b_pos
+t[0].title}", Preview: "{b_post[0].preview()}"')
+Best Post - Date posted: "09-20-2022, 04:21:35", Author: "Alex", Rating Post = "5", Title = "title 3", Preview: "some text 3..."
+>>> print(f'Best Post - Date posted: "{b_post[:].time_in.strftime("%m-%d-%Y, %H:%M:%S")}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'QuerySet' object has no attribute 'time_in'
+>>> print(for i in b_post: f'Best Post - Date posted: "{b_post[i].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[i].author.userAuthor.username}", Rating Post = "{b_post[i].rating}"
+, Title = "{b_post[i].title}", Preview: "{b_post[i].preview()}"')
+  File "<console>", line 1
+    print(for i in b_post: f'Best Post - Date posted: "{b_post[i].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[i].author.userAuthor.username}", Rating Post = "{b_post[i].rating}"
+, Title = "{b_post[i].title}", Preview: "{b_post[i].preview()}"')
+          ^
+SyntaxError: invalid syntax
+>>> print( f'Best Post - Date posted: "{b_post[i].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[i].author.userAuthor.username}", Rating Post = "{b_post[i].rating}", Title = "{b_po
+st[i].title}", Preview: "{b_post[i].preview()}"')
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\query.py", line 414, in __getitem__
+    raise TypeError(
+TypeError: QuerySet indices must be integers or slices, not Author.
+>>> for i in b_post:
+...     print( f'Best Post - Date posted: "{b_post[i].time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{b_post[i].author.userAuthor.username}", Rating Post = "{b_post[i].rating}", Title = "{
+b_post[i].title}", Preview: "{b_post[i].preview()}"')
+...
+Traceback (most recent call last):
+  File "<console>", line 2, in <module>
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\query.py", line 414, in __getitem__
+    raise TypeError(
+TypeError: QuerySet indices must be integers or slices, not Post.
+>>> for i in b_post:
+...     print( f'Best Post - Date posted: "{i.time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{i.author.userAuthor.username}", Rating Post = "{i.rating}", Title = "{i.title}", Preview: "{i.
+preview()}"')
+...
+Best Post - Date posted: "09-20-2022, 04:21:35", Author: "Alex", Rating Post = "5", Title = "title 3", Preview: "some text 3..."
+>>> b_post = Post.objects.order_by('-rating')
+>>> for i in b_post:
+...     print( f'Best Post - Date posted: "{i.time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{i.author.userAuthor.username}", Rating Post = "{i.rating}", Title = "{i.title}", Preview: "{i.
+preview()}"')
+...
+Best Post - Date posted: "09-20-2022, 04:21:35", Author: "Alex", Rating Post = "5", Title = "title 3", Preview: "some text 3..."
+Best Post - Date posted: "09-20-2022, 04:20:27", Author: "Bob", Rating Post = "3", Title = "title 1", Preview: "some text 1..."
+Best Post - Date posted: "09-20-2022, 04:21:09", Author: "Bob", Rating Post = "-3", Title = "title 2", Preview: "some text 2..."
+>>> b_comment = Comment.objects.filter(commentPost = Post.objects.order_by('-rating'))
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\query.py", line 1420, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\query.py", line 1438, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\query.py", line 1445, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\sql\query.py", line 1532, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\sql\query.py", line 1562, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\sql\query.py", line 1478, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\sql\query.py", line 1303, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\lookups.py", line 27, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\fields\related_lookups.py", line 168, in get_prep_lookup
+    return super().get_prep_lookup()
+  File "C:\Users\HOME\PycharmProjects\D2_news\venv\lib\site-packages\django\db\models\lookups.py", line 337, in get_prep_lookup
+    raise ValueError(
+ValueError: The QuerySet value for an exact lookup must be limited to one result using slicing.
+>>> b_post = Post.objects.order_by('-rating')[:1]
+>>> b_comment = Comment.objects.filter(commentPost = b_post)
+>>> b_comment
+<QuerySet [<Comment: Comment object (3)>, <Comment: Comment object (4)>]>
+>>> for i in b_comment:
+...     print( f'Comments for Best Post - Date posted: "{i.time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{i.author.userAuthor.username}", Rating Post = "{i.rating}", Text = "{i.text}"')
+...
+Traceback (most recent call last):
+  File "<console>", line 2, in <module>
+AttributeError: 'Comment' object has no attribute 'author'
+>>> for i in b_comment:
+...     print( f'Comments for Best Post - Date posted: "{i.time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{i.commentAuthor.userAuthor.username}", Rating Post = "{i.rating}", Text = "{i.tex
+t}"')
+...
+Traceback (most recent call last):
+  File "<console>", line 2, in <module>
+AttributeError: 'User' object has no attribute 'userAuthor'
+>>> for i in b_comment:
+...     print( f'Comments for Best Post - Date posted: "{i.time_in.strftime("%m-%d-%Y, %H:%M:%S")}", Author: "{i.commentAuthor.username}", Rating Post = "{i.rating}", Text = "{i.text}"')
+...
+Comments for Best Post - Date posted: "09-20-2022, 04:35:55", Author: "Alex", Rating Post = "-1", Text = "some text by user2"
+Comments for Best Post - Date posted: "09-20-2022, 04:36:33", Author: "Alex", Rating Post = "4", Text = "some text by user2 -2"
+>>>
